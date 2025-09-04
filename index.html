@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Food Delivery Factory Method</title>
+<style>
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;display:grid;place-items:center;height:100vh;margin:0;background:#f6f7fb}
+  .card{background:#fff;padding:24px;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.08);width:min(420px,92vw)}
+  h1{font-size:20px;margin:0 0 16px}
+  .row{display:flex;gap:12px}
+  select,button{padding:10px 12px;border-radius:10px;border:1px solid #dcddea;font-size:14px}
+  button{cursor:pointer}
+  #out{margin-top:16px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Food Delivery Factory Method</h1>
+  <div class="row">
+    <select id="type">
+      <option value="customer">Customer</option>
+      <option value="delivery">DeliveryPartner</option>
+      <option value="restaurant">Restaurant</option>
+    </select>
+    <button id="make">Create</button>
+  </div>
+  <div id="out"></div>
+</div>
+
+<script>
+class User{showRole(){}}
+class Customer extends User{showRole(){return "I am a Customer. I order food."}}
+class DeliveryPartner extends User{showRole(){return "I am a Delivery Partner. I deliver food."}}
+class Restaurant extends User{showRole(){return "I am a Restaurant. I prepare food."}}
+
+class UserFactory{createUser(){throw new Error("override")}}
+class CustomerFactory extends UserFactory{createUser(){return new Customer()}}
+class DeliveryPartnerFactory extends UserFactory{createUser(){return new DeliveryPartner()}}
+class RestaurantFactory extends UserFactory{createUser(){return new Restaurant()}}
+
+const map={customer:new CustomerFactory(),delivery:new DeliveryPartnerFactory(),restaurant:new RestaurantFactory()}
+
+const sel=document.getElementById("type")
+const out=document.getElementById("out")
+document.getElementById("make").addEventListener("click",()=>{
+  const f=map[sel.value]
+  const u=f.createUser()
+  out.textContent=u.showRole()
+})
+</script>
+</body>
+</html>
