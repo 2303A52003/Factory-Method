@@ -5,20 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Food Delivery Factory Method</title>
 <style>
-  body{font-family:"Segoe UI",sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#fdf6f9;margin:0}
-  .container{background:#fff;padding:24px;border-radius:20px;box-shadow:0 8px 20px rgba(0,0,0,0.1);width:min(480px,92vw)}
-  h1{text-align:center;color:#ff6b81}
+  body{font-family:"Segoe UI",sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;
+       background:linear-gradient(135deg,#ffe6f0,#fff5e6);}
+  .container{background:#fff;padding:24px;border-radius:22px;box-shadow:0 8px 24px rgba(0,0,0,0.15);width:min(500px,92vw)}
+  h1{text-align:center;color:#ff6b81;margin-top:0}
   .controls{display:flex;gap:12px;margin-bottom:20px}
-  select,button{padding:10px 12px;border-radius:10px;border:1px solid #ddd;font-size:14px}
+  select,button{padding:10px 14px;border-radius:10px;border:1px solid #ddd;font-size:14px}
   button{cursor:pointer;background:#ff6b81;color:#fff;border:none;transition:.2s}
   button:hover{background:#ff4757}
-  .users{display:grid;gap:12px}
-  .card{padding:14px 18px;border-radius:14px;background:#fff0f5;box-shadow:0 4px 10px rgba(0,0,0,0.08)}
-  .role{font-weight:600;font-size:15px;margin-bottom:6px}
-  .action{font-size:13px;color:#444}
-  .emoji{font-size:20px;margin-right:6px}
   #clear{background:#aaa;margin-left:auto}
   #clear:hover{background:#666}
+  .users{display:grid;gap:12px}
+  .card{padding:14px 18px;border-radius:16px;background:#fff0f5;
+        box-shadow:0 4px 12px rgba(0,0,0,0.08);opacity:0;transform:translateY(10px);
+        animation:fadeIn .4s forwards}
+  @keyframes fadeIn{to{opacity:1;transform:translateY(0)}}
+  .role{font-weight:600;font-size:15px;margin-bottom:6px}
+  .action{font-size:13px;color:#444}
+  .time{font-size:12px;color:#888;margin-top:6px}
 </style>
 </head>
 <body>
@@ -33,31 +37,34 @@
       <option value="admin">Admin</option>
     </select>
     <button id="make">Create</button>
-    <button id="clear">Clear</button>
+    <button id="clear">Clear 💖</button>
   </div>
   <div class="users" id="users"></div>
 </div>
 
 <script>
+// random emoji helper
+function randomEmoji(list){return list[Math.floor(Math.random()*list.length)]}
+
 // Product interface
 class User{showRole(){};showAction(){}}
 
 // Concrete Products
 class Customer extends User{
   showRole(){return "👩‍💻 I am a Customer"}
-  showAction(){return "I browse menus and order food 🍔"}
+  showAction(){return "I browse menus and order food "+randomEmoji(["🍕","🍔","🍩","🍿","🥗","🍣"])}
 }
 class DeliveryPartner extends User{
   showRole(){return "🚴 I am a Delivery Partner"}
-  showAction(){return "I pick up and deliver food 🛵"}
+  showAction(){return "I pick up and deliver food "+randomEmoji(["🚴","🛵","🚗","🚚"])}
 }
 class Restaurant extends User{
   showRole(){return "🏬 I am a Restaurant"}
-  showAction(){return "I prepare delicious meals 🍲"}
+  showAction(){return "I prepare delicious meals "+randomEmoji(["🍲","🍝","🍛","🥘"])}
 }
 class Chef extends User{
   showRole(){return "👨‍🍳 I am a Chef"}
-  showAction(){return "I cook yummy dishes 🍝"}
+  showAction(){return "I cook yummy dishes "+randomEmoji(["🍜","🍣","🍱","🍕"])}
 }
 class Admin extends User{
   showRole(){return "🛠️ I am an Admin"}
@@ -88,8 +95,10 @@ document.getElementById("make").addEventListener("click",()=>{
   const u=f.createUser()
   const card=document.createElement("div")
   card.className="card"
+  const time=new Date().toLocaleTimeString()
   card.innerHTML=`<div class="role">${u.showRole()}</div>
-                  <div class="action">${u.showAction()}</div>`
+                  <div class="action">${u.showAction()}</div>
+                  <div class="time">⏰ Created at: ${time}</div>`
   usersDiv.appendChild(card)
 })
 
